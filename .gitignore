@@ -37,3 +37,6 @@ _opam/
 
 # Direnv
 .direnv/
+
+# YOCaml
+_www/
