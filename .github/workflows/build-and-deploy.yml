@@ -24,7 +24,7 @@ jobs:
       - name: Build
         id: build
         run: |
-            opan exec -- dune build
+            opam exec -- dune build
             opam exec -- dune exec bin/homepage.exe
 
       - name: Upload artifact
