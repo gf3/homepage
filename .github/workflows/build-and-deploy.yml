@@ -21,6 +21,13 @@ jobs:
       - name: Install deps
         run: opam install . --deps-only -y
 
+      - name: Cache Homepage
+        id: cache-primes
+        uses: actions/cache@v6
+        with:
+          path: _www
+          key: ${{ runner.os }}-www
+
       - name: Build
         id: build
         run: |
@@ -37,6 +44,9 @@ jobs:
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
+    permissions:
+      pages: write
+      id-token: write
     runs-on: ubuntu-latest
     needs: build
     steps:
