@@ -5,8 +5,8 @@
 <ul id="experience__list">
     {% for exp in experiences %}
     <li>
-        <div><time>{{ exp.start_date.repr.date }}</time> to {% if exp.has_end_date %}<time>{{ exp.end_date.repr.date }}</time>{% else %}present{% endif %}</div>
         <h3><span>{{ exp.role }}</span> at {{ exp.company }}</h3>
+        <div><time>{{ exp.start_date.repr.date }}</time> to {% if exp.has_end_date %}<time>{{ exp.end_date.repr.date }}</time>{% else %}present{% endif %}</div>
 
         {{ safe (exp.body) }}
     </li>

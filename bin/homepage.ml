@@ -124,35 +124,7 @@ let create_articles ~site = create_documents ~site Article
 let fetch_articles =
   Archetype.Articles.fetch ~where:is_md ~compute_link (module Yocaml_yaml) articles
 
-let fetch_thweets =
-  let date = Homepage.Thweet.date in
-  let open Task in
-  Pipeline.fetch
-    ~only:`Files
-    ~where:is_md
-    ~on:`Source
-    (fun file ->
-       let open Eff in
-       let+ metadata, content =
-         Eff.read_file_with_metadata
-           (module Yocaml_yaml)
-           (module Homepage.Thweet)
-           ~on:`Source
-           file
-       in
-       metadata, Yocaml_markdown.from_string_to_html content)
-    thweets
-  >>| List.sort (fun (a, _) (b, _) -> ~-(Datetime.compare (date a) (date a)))
-
-let normalize_thweets thweets =
-  Data.
-    [ ( "thweets"
-      , list_of
-          (fun (thweet, body) ->
-             record (("body", string body) :: Homepage.Thweet.normalize thweet))
-          thweets )
-    ; "has_thweets", bool (thweets <> [])
-    ]
+let fetch_thweets = Homepage.Thweets.fetch ~where:is_md (module Yocaml_yaml) thweets
 
 let create_index ~site =
   let source = Path.(content / "index.md") in
@@ -171,7 +143,9 @@ let create_index ~site =
     in
     let metadata = Archetype.Articles.with_page ~page:metadata ~articles in
     let fields =
-      inject_site site (normalize_thweets thweets @ Archetype.Articles.normalize metadata)
+      inject_site
+        site
+        (Homepage.Thweets.normalize thweets @ Archetype.Articles.normalize metadata)
     in
     content
     |> Yocaml_markdown.from_string_to_html
@@ -182,24 +156,7 @@ let create_index ~site =
   Action.Static.write_file index_path pipeline
 
 let fetch_experiences =
-  let date = Homepage.Experience.date in
-  let open Task in
-  Pipeline.fetch
-    ~only:`Files
-    ~where:is_md
-    ~on:`Source
-    (fun file ->
-       let open Eff in
-       let+ metadata, content =
-         Eff.read_file_with_metadata
-           (module Yocaml_yaml)
-           (module Homepage.Experience)
-           ~on:`Source
-           file
-       in
-       metadata, Yocaml_markdown.from_string_to_html content)
-    experiences
-  >>| List.sort (fun (a, _) (b, _) -> ~-(Datetime.compare (date a) (date a)))
+  Homepage.Cv.Experiences.fetch ~where:is_md (module Yocaml_yaml) experiences
 
 let create_cv ~site =
   let source = Path.(content / "cv.md") in

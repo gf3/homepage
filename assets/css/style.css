@@ -135,6 +135,8 @@
 body {
     display: flex;
     flex-direction: column;
+    gap: 2rem;
+    padding: 2rem;
     font-family: var(--font-mono);
     font-size: var(--font-size);
     font-optical-sizing: auto;
@@ -148,6 +150,15 @@ body {
     line-height: var(--line-height);
     color: var(--theme-surface-a80);
     background-color: var(--theme-surface-a0);
+}
+
+pre code {
+    display: block;
+    width: 100%;
+    max-width: var(--max-width);
+    background-color: var(--theme-surface-a90);
+    color: var(--theme-surface-a0);
+    padding: 1ch;
 }
 
 a {
@@ -169,8 +180,6 @@ main {
 header,
 main,
 footer {
-    padding: 2rem;
-
     & p {
         max-width: var(--max-width);
     }
@@ -224,6 +233,7 @@ p {
     display: grid;
     grid-template-columns: 1fr;
     gap: 2rem;
+    margin-top: 2rem;
 
     @media (width >=768px) {
         & {
@@ -243,6 +253,18 @@ p {
 
 #experience__list {
     max-width: var(--max-width);
+
+    &>li>ul {
+        margin-top: 1rem;
+    }
+
+    &>li h3 {
+        font-weight: normal;
+
+        &>span {
+            font-weight: bold;
+        }
+    }
 
     &>li+li {
         margin-top: 1rem;
