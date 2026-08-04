@@ -9,6 +9,10 @@
     <link rel="stylesheet" href="/style.css" />
     <link rel="alternate" type="application/atom+xml" href="/atom.xml" />
     <link rel="canonical" href="{{ site.url }}{% if page_url is string %}{{ page_url }}{% endif %}">
+    <link rel="me" href="{{ site.github_url }}">
+    <link rel="me" href="{{ site.bluesky_url }}">
+    <link rel="me" href="{{ site.mastodon_url }}">
+    <link rel="me" href="mailto:{{ site.email }}">
 
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -34,6 +38,21 @@
     {% for tag in tags %}
     <meta property="article:tag" content="{{ tag }}">{% endfor %}
     {% endif %}
+
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": "{{ site.author }}",
+        "url": "{{ site.url }}",
+        "email": "{{ site.email }}",
+        "sameAs": [
+          "{{ site.github_url }}",
+          "{{ site.bluesky_url }}",
+          "{{ site.mastodon_url }}"
+        ]
+      }
+    </script>
 </head>
 
 <body>

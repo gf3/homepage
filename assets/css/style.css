@@ -156,6 +156,7 @@ pre code {
     display: block;
     width: 100%;
     max-width: var(--max-width);
+    margin: 1rem 0;
     background-color: var(--theme-surface-a90);
     color: var(--theme-surface-a0);
     padding: 1ch;

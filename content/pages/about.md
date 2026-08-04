@@ -21,3 +21,7 @@ And my PGP key fingerprint is:
 ```
 FC82 D9C1 BB38 FABB 9775 0D03 FD89 42A7 CBA9 4FD3
 ```
+
+## About this homepage
+
+This homepage is built with a really neat tool called [YOCaml](https://yocaml.github.io/tutorial)—it's similar to a static site generator but you compose the building blocks yourself. It's a lot of fun, actually. You can find the source at [@gf3/homepage](https://github.com/gf3/homepage).
