@@ -16,6 +16,23 @@ let articles = Path.(content / "articles")
 let with_ext exts file = List.exists (fun ext -> Path.has_extension ext file) exts
 let track_binary = Sys.executable_name |> Yocaml.Path.from_string |> Pipeline.track_file
 
+let read_site () =
+  Eff.read_file_as_metadata
+    (module Yocaml_yaml)
+    (module Homepage.Site)
+    ~on:`Source
+    Path.(content / "site.yml")
+
+let inject_site site fields = ("site", Homepage.Site.to_data site) :: fields
+
+module Fields : Required.DATA_INJECTABLE with type t = (string * Data.t) list = struct
+  type t = (string * Data.t) list
+
+  let normalize fields = fields
+end
+
+let copy_favicon = Action.copy_file ~into:www Path.(assets / "favicon.ico")
+
 let copy_images =
   let images_path = Path.(www / "images")
   and where = with_ext [ "svg"; "png"; "jpg"; "gif"; "webp" ] in
@@ -73,7 +90,7 @@ let document_archetype : document_kind -> (module ARCHETYPE) = function
   | Page -> (module Archetype.Page)
   | Article -> (module Archetype.Article)
 
-let create_document document_kind source =
+let create_document ~site document_kind source =
   let module Archetype = (val document_archetype document_kind) in
   let target = document_path document_kind source
   and pipeline =
@@ -85,24 +102,27 @@ let create_document document_kind source =
     and+ metadata, content =
       Yocaml_yaml.Pipeline.read_file_with_metadata (module Archetype) source
     in
+    let fields = inject_site site (Archetype.normalize metadata) in
     content
     |> Yocaml_markdown.from_string_to_html
-    |> templates (module Archetype) ~metadata
+    |> templates
+         (module Fields : Required.DATA_INJECTABLE with type t = (string * Data.t) list)
+         ~metadata:fields
   in
   Action.Static.write_file target pipeline
 
-let create_documents document_kind =
+let create_documents ~site document_kind =
   let where = is_md in
   let sources = document_sources document_kind in
-  Batch.iter_files ~where sources (create_document document_kind)
+  Batch.iter_files ~where sources (create_document ~site document_kind)
 
-let create_pages = create_documents Page
-let create_articles = create_documents Article
+let create_pages ~site = create_documents ~site Page
+let create_articles ~site = create_documents ~site Article
 
 let fetch_articles =
   Archetype.Articles.fetch ~where:is_md ~compute_link (module Yocaml_yaml) articles
 
-let create_index =
+let create_index ~site =
   let source = Path.(content / "index.md") in
   let index_path = source |> Path.move ~into:www |> Path.change_extension "html" in
   let pipeline =
@@ -117,29 +137,22 @@ let create_index =
       Yocaml_yaml.Pipeline.read_file_with_metadata (module Archetype.Page) source
     in
     let metadata = Archetype.Articles.with_page ~page:metadata ~articles in
+    let fields = inject_site site (Archetype.Articles.normalize metadata) in
     content
     |> Yocaml_markdown.from_string_to_html
-    |> templates (module Archetype.Articles) ~metadata
+    |> templates
+         (module Fields : Required.DATA_INJECTABLE with type t = (string * Data.t) list)
+         ~metadata:fields
   in
   Action.Static.write_file index_path pipeline
 
 module Feed = struct
   let path = "atom.xml"
-  let title = "okgreat"
-  let site_url = "https://okgreat.ca"
-  let feed_description = "A dangerous place to idle."
 
-  let owner =
-    Yocaml_syndication.Person.make
-      ~uri:site_url
-      ~email:"gianni@okgreat.ca"
-      "Gianni Chiappetta"
-
-  let authors = Nel.singleton owner
-
-  let article_to_entry (url, article) =
+  let article_to_entry ~site (url, article) =
     let open Yocaml.Archetype in
     let open Yocaml_syndication in
+    let site_url = Homepage.Site.url site in
     let page = Article.page article in
     let title = Article.title article
     and content_url = site_url ^ Path.to_string url
@@ -156,39 +169,44 @@ module Feed = struct
       ~title:(Atom.text title)
       ()
 
-  let make entries =
+  let make ~site entries =
     let open Yocaml_syndication in
+    let author = Homepage.Site.author site in
+    let email = Homepage.Site.email site in
+    let site_url = Homepage.Site.url site in
     Atom.feed
-      ~title:(Atom.text title)
-      ~subtitle:(Atom.text feed_description)
+      ~title:(Atom.text (Homepage.Site.name site))
+      ~subtitle:(Atom.text (Homepage.Site.description site))
       ~updated:(Atom.updated_from_entries ())
-      ~authors
+      ~authors:((Yocaml_syndication.Person.make ~uri:site_url ~email author) |> Nel.singleton)
       ~id:site_url
-      article_to_entry
+      (article_to_entry ~site)
       entries
 end
 
-let create_feed =
+let create_feed ~site =
   let feed_path = Path.(www / Feed.path)
   and pipeline =
     let open Task in
     let+ () = track_binary
     and+ articles = fetch_articles in
-    articles |> Feed.make |> Yocaml_syndication.Xml.to_string
+    articles |> Feed.make ~site |> Yocaml_syndication.Xml.to_string
   in
   Action.Static.write_file feed_path pipeline
 
 let program () =
   let open Eff in
+  let* site = read_site () in
   let cache = Path.(www / ".cache") in
   Action.restore_cache cache
+  >>= copy_favicon
   >>= copy_images
   >>= copy_fonts
   >>= create_css
-  >>= create_pages
-  >>= create_articles
-  >>= create_index
-  >>= create_feed
+  >>= create_pages ~site
+  >>= create_articles ~site
+  >>= create_index ~site
+  >>= create_feed ~site
   >>= Action.store_cache cache
 
 let () =

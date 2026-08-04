@@ -150,6 +150,14 @@ body {
     background-color: var(--theme-surface-a0);
 }
 
+a {
+    &:link {}
+    &:visited {}
+    &:focus {}
+    &:hover {}
+    &:active {}
+}
+
 main {
     flex: 1;
 }
@@ -176,6 +184,7 @@ header >div:first-of-type {
 
     & > p:first-of-type {
         font-style: italic;
+        text-transform: lowercase;
     }
 
     & > p:first-of-type::before {
@@ -184,7 +193,7 @@ header >div:first-of-type {
 }
 
 header h1 {
-    font-weight: normal;
+    font-weight: bold;
     font-size: 1rem;
 
     & nav {
@@ -208,15 +217,8 @@ p {
 }
 
 #rosa-final {
-    display: flex;
-    flex-direction: row;
-
-    & .rosa-final__before {
-        margin-right: 1ch;
-    }
-
     & .rosa-final__after {
-        display: flex;
+        display: inline-flex;
         flex-direction: column;
     }
 }

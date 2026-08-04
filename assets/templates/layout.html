@@ -1,24 +1,46 @@
 <!doctype html>
-<html lang="en-CA">
+<html lang="{{ site.lang }}">
 
 <head>
-    <title>
-        {% if has_page_title %}
-        {{ page_title}} -
-        {% endif %}
-        okgreat
-    </title>
+    <title>{% if has_page_title %}{{ page_title }} - {% endif %}{{ site.name }}</title>
+    <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
     <link rel="stylesheet" href="/style.css" />
     <link rel="alternate" type="application/atom+xml" href="/atom.xml" />
+    <link rel="canonical" href="{{ site.url }}{% if page_url is string %}{{ page_url }}{% endif %}">
+
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="color-scheme" content="light dark">
+    <meta name="description" content="{% if description %}{{ description }}{% else %}{{ site.description }}{% endif %}">
+    <meta name="author" content="{{ site.author }}">
+    {% if has_tags %}
+    <meta name="keywords" content="{{ tags | join(', ') }}">{% endif %}
+
+    <meta property="og:site_name" content="{{ site.name }}">
+    <meta property="og:type" content="{% if page_url is string %}article{% else %}website{% endif %}">
+    <meta property="og:title"
+        content="{% if page_title is string %}{{ page_title }}{% elseif title is string %}{{ title }}{% else %}{{ site.name }}{% endif %}">
+    <meta property="og:description"
+        content="{% if description %}{{ description }}{% else %}{{ site.description }}{% endif %}">
+    <meta property="og:url" content="{{ site.url }}{% if page_url is string %}{{ page_url }}{% endif %}">
+    <meta property="og:image"
+        content="{{ site.url }}{% if og_image is string %}{{ og_image }}{% else %}{{ site.og_image }}{% endif %}">
+    <meta property="og:locale" content="{{ site.lang }}">
+    {% if page_url is string %}
+    <meta property="article:published_time" content="{{ date.repr.date }}">
+    <meta property="article:author" content="{{ site.author }}">
+    {% for tag in tags %}
+    <meta property="article:tag" content="{{ tag }}">{% endfor %}
+    {% endif %}
 </head>
 
 <body>
     <header>
         <div>
-            <h1>okgreat</h1>
-            <p>a dangerous place to idle.</p>
+            <h1>{{ site.name }}</h1>
+            <p>{{ site.description }}</p>
         </div>
         <div>
             <nav>
@@ -37,7 +59,9 @@
     <footer>
         <div>
             <p>
-                <a href="https://ocaml.org" title="OCaml website"><svg role="img" class="icon"><use href="/images/icons.svg#ocaml" /></svg></a>
+                <a href="https://ocaml.org" title="OCaml website"><svg role="img" class="icon">
+                        <use href="/images/icons.svg#ocaml" />
+                    </svg></a>
                 Proudly built with
                 <a href="https://yocaml.github.io/tutorial">YOCaml</a>
             </p>
@@ -51,6 +75,6 @@
         </div>
     </footer>
 
-    <body>
+</body>
 
 </html>

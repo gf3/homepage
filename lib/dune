@@ -1,7 +1,6 @@
-(executable
- (public_name homepage)
- (libraries
-  homepage
+(library
+  (name homepage)
+  (libraries
   yocaml
   yocaml_unix
   yocaml_yaml
