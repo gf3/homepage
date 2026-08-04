@@ -216,6 +216,11 @@ p {
     margin: 1rem 0;
 }
 
+#posts__list {
+    margin-top: 1rem;
+    margin-bottom: 1rem;
+}
+
 #rosa-final {
     & .rosa-final__after {
         display: inline-flex;

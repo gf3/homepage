@@ -178,7 +178,8 @@ module Feed = struct
       ~title:(Atom.text (Homepage.Site.name site))
       ~subtitle:(Atom.text (Homepage.Site.description site))
       ~updated:(Atom.updated_from_entries ())
-      ~authors:((Yocaml_syndication.Person.make ~uri:site_url ~email author) |> Nel.singleton)
+      ~authors:
+        (Yocaml_syndication.Person.make ~uri:site_url ~email author |> Nel.singleton)
       ~id:site_url
       (article_to_entry ~site)
       entries

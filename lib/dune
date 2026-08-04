@@ -1,6 +1,6 @@
 (library
-  (name homepage)
-  (libraries
+ (name homepage)
+ (libraries
   yocaml
   yocaml_unix
   yocaml_yaml
