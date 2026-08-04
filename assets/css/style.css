@@ -187,11 +187,10 @@ footer {
 }
 
 header>div:first-of-type {
-    display: flex;
-    flex-direction: row;
-    gap: 0;
+    display: inline;
 
     &>* {
+        display: inline;
         margin: 0;
         padding: 0;
     }
@@ -202,7 +201,7 @@ header>div:first-of-type {
     }
 
     &>p:first-of-type::before {
-        content: "—";
+        content: "— ";
     }
 }
 
