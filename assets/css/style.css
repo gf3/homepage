@@ -140,11 +140,11 @@ body {
     font-optical-sizing: auto;
     font-feature-settings: "zero", "ss01", "cv11";
     font-variation-settings:
-      "opsz" 14,
-      "slnt" 0,
-      "wdth" 100,
-      "GRAD" 0,
-      "ROND" 0;
+        "opsz" 14,
+        "slnt" 0,
+        "wdth" 100,
+        "GRAD" 0,
+        "ROND" 0;
     line-height: var(--line-height);
     color: var(--theme-surface-a80);
     background-color: var(--theme-surface-a0);
@@ -152,9 +152,13 @@ body {
 
 a {
     &:link {}
+
     &:visited {}
+
     &:focus {}
+
     &:hover {}
+
     &:active {}
 }
 
@@ -167,27 +171,27 @@ main,
 footer {
     padding: 2rem;
 
-    &>div {
+    & p {
         max-width: var(--max-width);
     }
 }
 
-header >div:first-of-type {
+header>div:first-of-type {
     display: flex;
     flex-direction: row;
     gap: 0;
 
-    & > * {
+    &>* {
         margin: 0;
         padding: 0;
     }
 
-    & > p:first-of-type {
+    &>p:first-of-type {
         font-style: italic;
         text-transform: lowercase;
     }
 
-    & > p:first-of-type::before {
+    &>p:first-of-type::before {
         content: "—";
     }
 }
@@ -216,7 +220,22 @@ p {
     margin: 1rem 0;
 }
 
-#posts__list {
+#index {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 2rem;
+
+    @media (width >=768px) {
+        & {
+            grid-template-columns: 1fr 1fr;
+            gap: 2rem 1rem;
+            max-width: calc(1.5 * var(--max-width));
+        }
+    }
+}
+
+#posts__list,
+#thweets__list {
     margin-top: 1rem;
     margin-bottom: 1rem;
 }

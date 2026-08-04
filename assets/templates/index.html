@@ -1,20 +1,36 @@
 {{safe (yocaml_body) }}
 
-{% if has_articles %}
-<h1 id="posts">Posts</h1>
+<div id="index">
+    <div id="posts">
+        {% if has_articles %}
+        <h2>Posts</h2>
 
-<ul id="posts__list">
-  {% for article in articles %}
-  <li>
-    <time>{{ article.date.repr.date}}</time>
-    <a href="{{ article.url }}">{{ article.title }}</a>
-    <blockquote cite="{{ article.url }}"><p>{{ article.description }}</p></blockquote>
-  </li>
-  {% endfor %}
-</ul>
+        <ul id="posts__list">
+            {% for article in articles %}
+            <li>
+                <time>{{ article.date.repr.date}}</time>
+                <a href="{{ article.url }}">{{ article.title }}</a>
+                <blockquote cite="{{ article.url }}">
+                    <p>{{ article.description }}</p>
+                </blockquote>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
 
-{% else %}
+    <div id="thweets">
+        {% if has_thweets %}
+        <h2>Thoughts</h2>
 
-<p>There are no articles</p>
-
-{% endif %}
+        <ul id="thweets__list">
+            {% for thweet in thweets %}
+            <li>
+                <time>{{ thweet.date.repr.datetime }}</time>
+                <div>{{ safe (thweet.body) }}</div>
+            </li>
+            {% endfor %}
+        </ul>
+        {% endif %}
+    </div>
+</div>
