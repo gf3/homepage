@@ -14,6 +14,7 @@ let templates = Path.(assets / "templates")
 let pages = Path.(content / "pages")
 let articles = Path.(content / "articles")
 let thweets = Path.(content / "thweets")
+let experiences = Path.(content / "cv")
 let with_ext exts file = List.exists (fun ext -> Path.has_extension ext file) exts
 let track_binary = Sys.executable_name |> Yocaml.Path.from_string |> Pipeline.track_file
 
@@ -180,6 +181,49 @@ let create_index ~site =
   in
   Action.Static.write_file index_path pipeline
 
+let fetch_experiences =
+  let date = Homepage.Experience.date in
+  let open Task in
+  Pipeline.fetch
+    ~only:`Files
+    ~where:is_md
+    ~on:`Source
+    (fun file ->
+       let open Eff in
+       let+ metadata, content =
+         Eff.read_file_with_metadata
+           (module Yocaml_yaml)
+           (module Homepage.Experience)
+           ~on:`Source
+           file
+       in
+       metadata, Yocaml_markdown.from_string_to_html content)
+    experiences
+  >>| List.sort (fun (a, _) (b, _) -> ~-(Datetime.compare (date a) (date a)))
+
+let create_cv ~site =
+  let source = Path.(content / "cv.md") in
+  let cv_path = source |> Path.move ~into:www |> Path.change_extension "html" in
+  let pipeline =
+    let open Task in
+    let+ () = track_binary
+    and+ templates =
+      Yocaml_jingoo.read_templates
+        Path.[ templates / "cv.html"; templates / "page.html"; templates / "layout.html" ]
+    and+ experiences = fetch_experiences
+    and+ metadata, content =
+      Yocaml_yaml.Pipeline.read_file_with_metadata (module Archetype.Page) source
+    in
+    let cv = Homepage.Cv.with_page ~page:metadata ~experiences in
+    let fields = inject_site site (Homepage.Cv.normalize cv) in
+    content
+    |> Yocaml_markdown.from_string_to_html
+    |> templates
+         (module Fields : Required.DATA_INJECTABLE with type t = (string * Data.t) list)
+         ~metadata:fields
+  in
+  Action.Static.write_file cv_path pipeline
+
 module Feed = struct
   let path = "atom.xml"
 
@@ -241,6 +285,7 @@ let program () =
   >>= create_pages ~site
   >>= create_articles ~site
   >>= create_index ~site
+  >>= create_cv ~site
   >>= create_feed ~site
   >>= Action.store_cache cache
 

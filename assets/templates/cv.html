@@ -1,0 +1,21 @@
+{{safe (yocaml_body) }}
+
+{% if has_experiences %}
+
+<ul id="experience__list">
+    {% for exp in experiences %}
+    <li>
+        <div><time>{{ exp.start_date.repr.date }}</time> to {% if exp.has_end_date %}<time>{{ exp.end_date.repr.date }}</time>{% else %}present{% endif %}</div>
+        <h3><span>{{ exp.role }}</span> at {{ exp.company }}</h3>
+
+        {{ safe (exp.body) }}
+    </li>
+    {% endfor %}
+</ul>
+
+
+{% else %}
+
+<p>No experience (so far).</p>
+
+{% endif %}

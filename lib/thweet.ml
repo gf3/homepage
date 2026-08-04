@@ -18,10 +18,7 @@ let validate =
     { date; og_image })
 
 let normalize { date; og_image } =
-  Data.
-    [ "date", Datetime.normalize date
-    ; "og_image", string og_image
-    ]
+  Data.[ "date", Datetime.normalize date; "og_image", string og_image ]
 
 let to_data t = Data.record (normalize t)
 let date t = t.date

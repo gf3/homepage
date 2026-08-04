@@ -234,10 +234,19 @@ p {
     }
 }
 
+#experience__list,
 #posts__list,
 #thweets__list {
     margin-top: 1rem;
     margin-bottom: 1rem;
+}
+
+#experience__list {
+    max-width: var(--max-width);
+
+    &>li+li {
+        margin-top: 1rem;
+    }
 }
 
 #rosa-final {
