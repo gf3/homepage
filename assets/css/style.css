@@ -1,22 +1,82 @@
 /* Style.css */
+/* Font: Ioskeley Mono */
 @font-face {
-    font-family: "Maple Mono";
-    src: url("/fonts/MapleMono[wght].ttf") format("truetype");
+    font-family: "IoskeleyMono";
+    src: url("/fonts/IoskeleyMono-Light.woff2") format("woff2");
     font-style: normal;
+    font-weight: 300;
 }
 
 @font-face {
-    font-family: "Maple Mono";
-    src: url("/fonts/MapleMono-Italic[wght].ttf") format("truetype");
+    font-family: "IoskeleyMono";
+    src: url("/fonts/IoskeleyMono-Regular.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "IoskeleyMono";
+    src: url("/fonts/IoskeleyMono-Medium.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: "IoskeleyMono";
+    src: url("/fonts/IoskeleyMono-SemiBold.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: "IoskeleyMono";
+    src: url("/fonts/IoskeleyMono-Bold.woff2") format("woff2");
+    font-style: normal;
+    font-weight: 700;
+}
+
+/* Font: Ioskeley Mono, Italic */
+@font-face {
+    font-family: "IoskeleyMono";
+    src: url("/fonts/IoskeleyMono-LightItalic.woff2") format("woff2");
     font-style: italic;
+    font-weight: 300;
+}
+
+@font-face {
+    font-family: "IoskeleyMono";
+    src: url("/fonts/IoskeleyMono-Italic.woff2") format("woff2");
+    font-style: italic;
+    font-weight: 400;
+}
+
+@font-face {
+    font-family: "IoskeleyMono";
+    src: url("/fonts/IoskeleyMono-MediumItalic.woff2") format("woff2");
+    font-style: italic;
+    font-weight: 500;
+}
+
+@font-face {
+    font-family: "IoskeleyMono";
+    src: url("/fonts/IoskeleyMono-SemiBoldItalic.woff2") format("woff2");
+    font-style: italic;
+    font-weight: 600;
+}
+
+@font-face {
+    font-family: "IoskeleyMono";
+    src: url("/fonts/IoskeleyMono-BoldItalic.woff2") format("woff2");
+    font-style: italic;
+    font-weight: 700;
 }
 
 :root {
     --max-width: 66ch;
     --width-screen: min(100rem, 100%);
     --font-size: 1rem;
-    --font-sans: "Libertinus Sans", sans-serif;
-    --font-mono: "Maple Mono", mono;
+    --font-sans: sans-serif;
+    --font-mono: "IoskeleyMono", mono;
     --line-height: 1.5;
 
     /* Theme */
