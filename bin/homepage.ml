@@ -106,7 +106,8 @@ let create_document ~site document_kind source =
     in
     let fields = inject_site site (Archetype.normalize metadata) in
     content
-    |> Yocaml_markdown.from_string_to_html
+    |> Homepage.Markdown.prepare_md ~metadata:fields
+    |> Homepage.Markdown.to_html
     |> templates
          (module Fields : Required.DATA_INJECTABLE with type t = (string * Data.t) list)
          ~metadata:fields
@@ -148,7 +149,8 @@ let create_index ~site =
         (Homepage.Thweets.normalize thweets @ Archetype.Articles.normalize metadata)
     in
     content
-    |> Yocaml_markdown.from_string_to_html
+    |> Homepage.Markdown.prepare_md ~metadata:fields
+    |> Homepage.Markdown.to_html
     |> templates
          (module Fields : Required.DATA_INJECTABLE with type t = (string * Data.t) list)
          ~metadata:fields

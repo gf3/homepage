@@ -1,9 +1,36 @@
 (library
  (name homepage)
  (libraries
+  hilite
+  textmate-language
   yocaml
   yocaml_unix
   yocaml_yaml
   yocaml_markdown
   yocaml_jingoo
-  yocaml_syndication))
+  yocaml_syndication
+  yojson))
+
+; Embed TextMate grammars for markdown highlighting.
+
+(rule
+ (target shell_grammar.ml)
+ (deps ../grammars/shell.tmLanguage.json)
+ (action
+  (with-stdout-to
+   %{target}
+   (progn
+    (echo "let json = {grammar|")
+    (cat %{deps})
+    (echo "|grammar}\n")))))
+
+(rule
+ (target elixir_grammar.ml)
+ (deps ../grammars/elixir.tmLanguage.json)
+ (action
+  (with-stdout-to
+   %{target}
+   (progn
+    (echo "let json = {grammar|")
+    (cat %{deps})
+    (echo "|grammar}\n")))))

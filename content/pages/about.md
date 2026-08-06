@@ -8,12 +8,12 @@ I like to cook, and paint, and to start projects and never finish them.
 
 ## Contact me
 
-Feel free to contact me via email at <a href="mailto:gianni@okgreat.ca">gianni@okgreat.ca</a>
+Feel free to contact me via email at <a href="mailto:{{ site.email }}">{{ site.email }}</a>
 
-If you like you can sign and encrypt your emails to me with PGP. You can download my PGP automatically:
+If you like you can sign and encrypt your emails to me with PGP. You can download my PGP key automatically:
 
 ```sh
-gpg --locate-keys gianni@okgreat.ca
+gpg --locate-keys {{ site.email }}
 ```
 
 And my PGP key fingerprint is:
